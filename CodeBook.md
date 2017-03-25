@@ -1,191 +1,56 @@
 # Getting and Cleaning Data
 ## Course Project
 
-Instructions:
-* The purpose of this project is to demonstrate your ability to collect, work with, and clean a data set. The goal is to prepare tidy data that can be used for later analysis. You will be graded by your peers on a series of yes/no questions related to the project. You will be required to submit: 1) a tidy data set as described below, 2) a link to a Github repository with your script for performing the analysis, and 3) a code book that describes the variables, the data, and any transformations or work that you performed to clean up the data called CodeBook.md. You should also include a README.md in the repo with your scripts. This repo explains how all of the scripts work and how they are connected.
+For this project, it was required that datasets as downloaded at 
+[link]( https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip) be merged into a single data set (further information describing aspects of the data at [link](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones)). From this merged data, a "tidy" dataset was then to be formed. The procedure involved in the merging and tidying of the data is as described in the accompanying README file.
 
-The data for this project can be downloaded using the following 
-[link]( https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip) with further information describing aspects of the data at:
-[link](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones)
+Here, the contents of the tidy dataset are described. The tidy data set has 6 columns:
 
-The data was gathered through accelerometer and gyroscope measurements on participants performing 6 different activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) while wearing a Samsung Galaxy S II on the waist. In total, 33 different features were gathered:
-
-* tBodyAcc-XYZ
-* tGravityAcc-XYZ
-* tBodyAccJerk-XYZ
-* tBodyGyro-XYZ
-* tBodyGyroJerk-XYZ
-* tBodyAccMag
-* tGravityAccMag
-* tBodyAccJerkMag
-* tBodyGyroMag
-* tBodyGyroJerkMag
-* fBodyAcc-XYZ
-* fBodyAccJerk-XYZ
-* fBodyGyro-XYZ
-* fBodyAccMag
-* fBodyAccJerkMag
-* fBodyGyroMag
-* fBodyGyroJerkMag
-
-where "XYZ" indicates seperate features along the X, Y and Z axes (f stands for frequency and t stands for time). For further information, refer to *features.txt*, *features_info.txt* and the *README* contained within the dataset zip file.
-
-From these features, various variables were estimated. Of interest, the:
-* mean(): Mean value
-* std(): Standard deviation
-were of interest. 
-
-**It should be noted that the variables include measures for the meanFreq(). The decision was taken to exclude these from the variables of interest.**
-
-## Training and Testing Data Merge
-
-The data of interest was stored in seperate *training* and *testing* files. The first task was to merge the data into a single dataset. The procedure to do so is as commented in run_analysis.R. Before running the code, it is necessary to load (install first if needed) the following libraries:
-
-~~~~
-#Load necessary libraries
-library(dplyr)
-library(tidyr)
-~~~~
-
-Following this, use the following command:
-
-~~~~
-source("run_analysis.R")
-~~~~
-
-The first part of the code is responsible for merge the data from the training and testing data sets. The code extracts the data from the respective files and merges them into a single dataframme, called *combinedData*.
-
-~~~~
-> str(combinedData)
-'data.frame':	10299 obs. of  68 variables:
- $ Subjects                   : int  1 1 1 1 1 1 1 1 1 1 ...
- $ Activity_Labels            : chr  "WALKING" "WALKING" "WALKING" "WALKING" ...
- $ tBodyAcc_mean()_X          : num  0.156 0.18 0.19 0.202 0.204 ...
- $ tBodyAcc_mean()_Y          : num  -0.04961 -0.0178 -0.0389 -0.00904 -0.03051 ...
- $ tBodyAcc_mean()_Z          : num  -0.1129 -0.0393 -0.0987 -0.0791 -0.1371 ...
- $ tBodyAcc_std()_X           : num  -0.297 -0.377 -0.331 -0.221 -0.247 ...
- $ tBodyAcc_std()_Y           : num  0.1756 0.0235 0.0448 0.1231 0.2986 ...
- $ tBodyAcc_std()_Z           : num  -0.254 -0.247 -0.354 -0.222 -0.206 ...
- $ tGravityAcc_mean()_X       : num  0.911 0.951 0.929 0.946 0.954 ...
- $ tGravityAcc_mean()_Y       : num  -0.334 -0.248 -0.302 -0.255 -0.243 ...
- $ tGravityAcc_mean()_Z       : num  -0.1447 -0.0385 -0.1194 -0.0226 -0.023 ...
- $ tGravityAcc_std()_X        : num  -0.933 -0.983 -0.981 -0.99 -0.989 ...
- $ tGravityAcc_std()_Y        : num  -0.935 -0.958 -0.98 -0.963 -0.979 ...
- $ tGravityAcc_std()_Z        : num  -0.725 -0.956 -0.979 -0.954 -0.977 ...
- $ tBodyAccJerk_mean()_X      : num  0.2151 0.3631 0.2202 -0.1378 -0.0752 ...
- $ tBodyAccJerk_mean()_Y      : num  0.2801 0.1097 0.0691 0.4212 0.2401 ...
- $ tBodyAccJerk_mean()_Z      : num  0.202 0.253 -0.209 0.507 -0.259 ...
- $ tBodyAccJerk_std()_X       : num  -0.0117 -0.2244 -0.1152 -0.1362 -0.0812 ...
- $ tBodyAccJerk_std()_Y       : num  0.1059 -0.0527 0.014 0.0427 0.243 ...
- $ tBodyAccJerk_std()_Z       : num  -0.351 -0.582 -0.505 -0.546 -0.492 ...
- $ tBodyGyro_mean()_X         : num  0.2082 -0.044 -0.0428 0.0175 0.0368 ...
- $ tBodyGyro_mean()_Y         : num  -0.22176 -0.00142 -0.1664 0.05153 -0.23542 ...
- $ tBodyGyro_mean()_Z         : num  -0.1172 0.0757 0.1145 0.1078 0.167 ...
- $ tBodyGyro_std()_X          : num  -0.225 -0.514 -0.461 -0.445 -0.482 ...
- $ tBodyGyro_std()_Y          : num  0.0313 -0.0654 -0.0218 -0.0224 0.0137 ...
- $ tBodyGyro_std()_Z          : num  -0.301 -0.333 -0.365 -0.348 -0.316 ...
- $ tBodyGyroJerk_mean()_X     : num  0.0569 0.0644 -0.0951 -0.1927 -0.1607 ...
- $ tBodyGyroJerk_mean()_Y     : num  -0.4138 -0.3598 -0.0566 -0.5182 -0.0958 ...
- $ tBodyGyroJerk_mean()_Z     : num  -0.0336 -0.2291 -0.1246 0.0395 -0.0809 ...
- $ tBodyGyroJerk_std()_X      : num  -0.182 -0.293 -0.159 -0.174 -0.206 ...
- $ tBodyGyroJerk_std()_Y      : num  -0.161 -0.362 -0.236 -0.319 -0.341 ...
- $ tBodyGyroJerk_std()_Z      : num  -0.348 -0.462 -0.395 -0.426 -0.284 ...
- $ tBodyAccMag_mean()         : num  -0.1518 -0.2065 -0.2043 -0.0836 -0.0465 ...
- $ tBodyAccMag_std()          : num  -0.119 -0.305 -0.27 -0.202 -0.186 ...
- $ tGravityAccMag_mean()      : num  -0.1518 -0.2065 -0.2043 -0.0836 -0.0465 ...
- $ tGravityAccMag_std()       : num  -0.119 -0.305 -0.27 -0.202 -0.186 ...
- $ tBodyAccJerkMag_mean()     : num  -0.104 -0.245 -0.157 -0.175 -0.046 ...
- $ tBodyAccJerkMag_std()      : num  0.1621 -0.202 -0.0971 -0.0923 -0.0603 ...
- $ tBodyGyroMag_mean()        : num  0.0536 -0.2215 -0.1511 -0.1438 -0.1131 ...
- $ tBodyGyroMag_std()         : num  -0.124 -0.112 -0.167 -0.149 -0.195 ...
- $ tBodyGyroJerkMag_mean()    : num  -0.203 -0.386 -0.233 -0.3 -0.293 ...
- $ tBodyGyroJerkMag_std()     : num  -0.202 -0.341 -0.293 -0.336 -0.365 ...
- $ fBodyAcc_mean()_X          : num  -0.151 -0.28 -0.216 -0.182 -0.161 ...
- $ fBodyAcc_mean()_Y          : num  0.1555 -0.1011 0.0173 0.1284 0.2504 ...
- $ fBodyAcc_mean()_Z          : num  -0.259 -0.344 -0.397 -0.254 -0.279 ...
- $ fBodyAcc_std()_X           : num  -0.364 -0.419 -0.382 -0.236 -0.284 ...
- $ fBodyAcc_std()_Y           : num  0.11182 0.02044 -0.00666 0.04916 0.24154 ...
- $ fBodyAcc_std()_Z           : num  -0.312 -0.253 -0.38 -0.265 -0.228 ...
- $ fBodyAccJerk_mean()_X      : num  -0.038 -0.26 -0.18 -0.197 -0.115 ...
- $ fBodyAccJerk_mean()_Y      : num  -0.0194 -0.2173 -0.0941 -0.0876 0.1191 ...
- $ fBodyAccJerk_mean()_Z      : num  -0.351 -0.543 -0.491 -0.502 -0.452 ...
- $ fBodyAccJerk_std()_X       : num  -0.0723 -0.2553 -0.1254 -0.1485 -0.1274 ...
- $ fBodyAccJerk_std()_Y       : num  0.1686 0.0556 0.0647 0.114 0.296 ...
- $ fBodyAccJerk_std()_Z       : num  -0.35 -0.62 -0.516 -0.588 -0.529 ...
- $ fBodyGyro_mean()_X         : num  -0.0927 -0.4047 -0.2853 -0.2919 -0.4162 ...
- $ fBodyGyro_mean()_Y         : num  0.0203 -0.0819 -0.1039 -0.0771 -0.0965 ...
- $ fBodyGyro_mean()_Z         : num  -0.21 -0.253 -0.247 -0.283 -0.227 ...
- $ fBodyGyro_std()_X          : num  -0.268 -0.549 -0.517 -0.494 -0.504 ...
- $ fBodyGyro_std()_Y          : num  0.03075 -0.06186 0.01886 0.00317 0.06913 ...
- $ fBodyGyro_std()_Z          : num  -0.398 -0.422 -0.467 -0.431 -0.41 ...
- $ fBodyAccMag_mean()         : num  0.0267 -0.2494 -0.1705 -0.085 -0.0688 ...
- $ fBodyAccMag_std()          : num  -0.35 -0.445 -0.446 -0.4 -0.388 ...
- $ fBodyBodyAccJerkMag_mean() : num  0.206 -0.2047 -0.0456 -0.0865 -0.0187 ...
- $ fBodyBodyAccJerkMag_std()  : num  0.106 -0.204 -0.172 -0.106 -0.116 ...
- $ fBodyBodyGyroMag_mean()    : num  -0.0735 -0.1175 -0.1511 -0.1547 -0.2683 ...
- $ fBodyBodyGyroMag_std()     : num  -0.32 -0.263 -0.326 -0.292 -0.283 ...
- $ fBodyBodyGyroJerkMag_mean(): num  -0.232 -0.333 -0.306 -0.36 -0.37 ...
- $ fBodyBodyGyroJerkMag_std() : num  -0.218 -0.397 -0.326 -0.352 -0.403 ...
-~~~~
-
-The dataframe has 10299 rows and 68 columns. It is organised by the number of the subject, as displayed in the first column, *Subjects*. The second column is *Activity_Label*, which describes the activity being performed. The remaining 66 columns are the 33 features as described previously, each shown as a mean() or std().
-
-## Tidy Data
-The second aspect of the project was:
-* From the data set in step 4, create a second, independent tidy data set with the average of each variable for each activity and each subject.
-
-**Note: As per this instruction, the mean of the combination of variable, activity and subject needs to be calculated. Although what subject and activity refer to is clear, what is deemed an variable is not so clear. Here an "variable" is taken as each feature/column in the combinedData dataframe (not including "Subjects" and "Activity_Label"). Thus there are 66 variables**
-
-Tidy data follows 3 main guidelines, as discussed in Wickham, H., 2014. Tidy data. *The Journal of Statistical Software* 59 (10), [link](http://vita.had.co.nz/papers/tidy-data.pdf). These are:
-* Each variable forms a column.
-* Each observation forms a row.
-* Each type of observational unit forms a table.
-
-Although these guidelines seem clear, what is deemed a contravention of these is often up to interpretation. In this case, (and after much deliberation) the following needs to be addressed:
-1. The 66 variable columns are interpreted as being variable values under a single variable name. This variable name is given as "Feature_Measure_Axis."
-2. Additionally to this point, the variable values under "Feature_Measure_Axis" contains 3 variables in the same column (Refer to swirl tutorial on tidy data for similar example). These variables are split into individual columns, "Feature", "Measure" and "Axis."
-
-To address point number 1, the following bit of code is employed:
-~~~~
-tidycombinedData <- combinedData %>% 
-                    gather(Feature_Measure_Axis, count, -(c(Subjects, Activity_Labels))) %>%
-                    group_by(Subjects, Activity_Labels, Feature_Measure_Axis) %>%
-                    summarise(Mean = mean(count))
-~~~~                    
-
-where the last line is used to calculated the mean of the variable/subject/activity grouping. 
-
-The second point is addressed through
-~~~~
-tidycombinedData <- separate(tidycombinedData, Feature_Measure_Axis, c("Feature", "Measure", "Axis"))
-~~~~
-
-Of course, this line could be included in the "code pipe" above, but is seperated to make it clear as to what is being done in terms of the points addressed.
-
-As a result, the following (skinny) tidy data is produced
-~~~~
-> tidycombinedData
-Source: local data frame [11,880 x 6]
-Groups: Subjects, Activity_Labels [180]
-
-   Subjects Activity_Labels      Feature Measure  Axis       Mean
-*     <int>           <chr>        <chr>   <chr> <chr>      <dbl>
-1         1          LAYING fBodyAccJerk    mean     X -0.9570739
-2         1          LAYING fBodyAccJerk    mean     Y -0.9224626
-3         1          LAYING fBodyAccJerk    mean     Z -0.9480609
-4         1          LAYING fBodyAccJerk     std     X -0.9641607
-5         1          LAYING fBodyAccJerk     std     Y -0.9322179
-6         1          LAYING fBodyAccJerk     std     Z -0.9605870
-7         1          LAYING  fBodyAccMag    mean       -0.8617676
-8         1          LAYING  fBodyAccMag     std       -0.7983009
-9         1          LAYING     fBodyAcc    mean     X -0.9390991
-10        1          LAYING     fBodyAcc    mean     Y -0.8670652
-# ... with 11,870 more rows
-~~~~
-
-Finally, the tidy dataset is written to "TidyData.txt"
-~~~~
-write.table(tidycombinedData, "TidyData.txt",row.name=FALSE) 
-~~~~
+* Subjects - Participant numbers:
+    * 1-30
+    
+    
+* Activity_Labels - Activities the particpants had to perform
+    * WALKING
+    * WALKING_UPSTAIRS
+    * WALKING_DOWNSTAIRS
+    * SITTING
+    * STANDING
+    * LAYING
 
 
+* Feature - variables used on the feature vector
+    * tBodyAcc - time domain body acceleration signal
+    * tGravityAcc - time domain gravity acceleration signal
+    * tBodyAccJerk - time domain body acceleration Jerk signal
+    * tBodyGyro - time domain body gyroscopic signal
+    * tBodyGyroJerk - time domain body gyroscopic signal
+    * tBodyAccMag - time domain body acceleration magnitude 
+    * tGravityAccMag - time domain gravity acceleration magnitude
+    * tBodyAccJerkMag - time domain body acceleration Jerk magnitude
+    * tBodyGyroMag - time domain body gyroscopic magnitude
+    * tBodyGyroJerkMag - time domain body gyroscopic Jerk magnitude
+    * fBodyAcc - frequency body acceleration vector
+    * fBodyAccJerk - frequency body acceleration Jerk vector
+    * fBodyGyro - frequency body gyroscopic vector
+    * fBodyAccMag - frequency body acceleration magnitude
+    * fBodyAccJerkMag - frequency body acceleration Jerk magnitude
+    * fBodyGyroMag - frequency body gyroscopic magnitude
+    * fBodyGyroJerkMag - frequency body gyroscopic Jerk magnitude
+
+    
+* Measure - set of variables that were estimated from these features
+    * mean() - Mean value
+    * std() - Standard deviation
+
+    
+* Axis - axis along which feature was measured
+    * X
+    * Y
+    * Z
+    * Na
+
+    
+* Mean - mean value of variable/subject/activity
+    
+    
